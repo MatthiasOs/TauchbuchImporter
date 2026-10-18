@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tauchbuch Import</title>
+</head>
+<body>
+<h1>Tauchbuchseite hochladen</h1>
+
+<p style="color: red" th:if="${error}" th:text="${error}"></p>
+
+<form method="post" action="/extract" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" capture="environment" required>
+    <button type="submit">Auslesen</button>
+</form>
+
+<p id="hint" style="display:none">Das Auslesen kann je nach Rechner einige Minuten dauern, bitte warten ...</p>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function () {
+        document.getElementById('hint').style.display = 'block';
+    });
+</script>
+</body>
+</html>

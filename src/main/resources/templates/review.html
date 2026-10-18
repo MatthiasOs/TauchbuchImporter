@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Review</title>
+    <style>
+        body { font-family: sans-serif; margin: 1rem; }
+        .layout { display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
+        .image { flex: 1 1 400px; position: sticky; top: 1rem; }
+        .image img { max-width: 100%; }
+        .forms { flex: 1 1 400px; }
+        .dive { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 6px; }
+        label { display: block; margin-top: .5rem; }
+        input { width: 100%; box-sizing: border-box; padding: .3rem; }
+    </style>
+</head>
+<body>
+<h1>Erkannte Tauchgänge prüfen</h1>
+
+<p class="error" th:if="${error}" th:text="${error}"></p>
+
+<p th:if="${#lists.isEmpty(reviewForm.dives)}">
+    Es wurde kein Tauchgang erkannt. <a href="/">Zurück</a>
+</p>
+
+<div class="layout">
+    <div class="image" th:if="${imageData}">
+        <img th:src="${imageData}" alt="Originalseite">
+    </div>
+
+    <form class="forms" method="post" action="/export" th:object="${reviewForm}">
+        <div class="dive" th:each="dive, stat : *{dives}">
+            <h2>Tauchgang <span th:text="${stat.count}"></span></h2>
+
+            <label>Nr.
+                <input type="number" th:field="*{dives[__${stat.index}__].number}">
+            </label>
+            <label>Datum
+                <input type="date" th:field="*{dives[__${stat.index}__].date}">
+            </label>
+            <label>Start
+                <input type="time" th:field="*{dives[__${stat.index}__].diveTimeStart}">
+            </label>
+            <label>Ende
+                <input type="time" th:field="*{dives[__${stat.index}__].diveTimeEnd}">
+            </label>
+            <label>Tauchzeit (min)
+                <input type="number" th:field="*{dives[__${stat.index}__].duration}">
+            </label>
+            <label>Ort
+                <input type="text" th:field="*{dives[__${stat.index}__].location}">
+            </label>
+            <label>Tauchplatz
+                <input type="text" th:field="*{dives[__${stat.index}__].diveLocation}">
+            </label>
+            <label>Max. Tiefe (m)
+                <input type="number" th:field="*{dives[__${stat.index}__].depth}">
+            </label>
+            <label>Wassertemperatur (°C)
+                <input type="number" step="0.1" th:field="*{dives[__${stat.index}__].waterTemperature}">
+            </label>
+            <label>Bemerkung
+                <input type="text" th:field="*{dives[__${stat.index}__].comment}">
+            </label>
+        </div>
+
+        <button type="submit" th:unless="${#lists.isEmpty(reviewForm.dives)}">Bestätigen und exportieren</button>
+    </form>
+</div>
+</body>
+</html>
